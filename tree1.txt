@@ -1,6 +1,143 @@
-35
-9
-29
-7
-33
-33
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+typedef struct BST
+{
+	int data;
+	struct BST *left;
+	struct BST *right;
+}*node;
+
+node create();
+void insert(node ,node );
+void preorder(node );
+void postorder(node );
+void inorder(node );
+
+
+int main()
+{
+	char ch;
+	int item,f=0;
+	node root=NULL,temp;
+
+    int n;
+    printf("Enter the number of elements to be added in the tree\n");
+    scanf("%d",&n);
+
+
+    int data,p=1,q=100;
+    for( int i=0; i<n; i++)
+    {
+        srand(time(0));
+        q=q-p;
+        data=(rand()%q);
+        data=data+p;
+        temp=create(data);
+	 	if(root==NULL)
+ 		root=temp;
+		else
+		insert(root,temp);
+    }
+
+
+
+	printf("Preorder Traversal: \n");
+	preorder(root);
+	printf("Postorder Traversal: \n");
+	postorder(root);
+	printf("Inorder Traversal: \n");
+	inorder(root);
+
+
+return 0;
+}
+
+
+node create(int data)
+{
+	node temp;
+	temp=(node)malloc(sizeof( struct BST));
+	temp->data=data;
+	temp->left=temp->right=NULL;
+	return temp;
+}
+
+void insert(node root,node temp)
+{
+	if(temp->data<root->data)
+	{
+		if(root->left!=NULL)
+			insert(root->left,temp);
+		else
+			root->left=temp;
+	}
+
+	if(temp->data>root->data)
+	{
+		if(root->right!=NULL)
+			insert(root->right,temp);
+		else
+			root->right=temp;
+	}
+}
+
+void preorder(node root)
+{
+
+    FILE *preOrderFile;
+    if ((preOrderFile = fopen("preorder.txt","a")) == NULL)
+     {
+       printf("Error! opening file");
+       exit(1);
+     }
+
+	if(root!=NULL)
+	{
+        printf("%d\n",root->data);
+		fprintf(preOrderFile,"%d\n",root->data);
+		preorder(root->left);
+		preorder(root->right);
+	}
+    fclose(preOrderFile);
+}
+
+void postorder(node root)
+{
+    FILE *postOrderFile;
+    if ((postOrderFile = fopen("postorder.txt","a")) == NULL)
+     {
+       printf("Error! opening file");
+       exit(1);
+     }
+	if(root!=NULL)
+	{
+		postorder(root->left);
+		postorder(root->right);
+        printf("%d\n",root->data);
+	    fprintf(postOrderFile,"%d\n",root->data);
+	}
+    fclose(postOrderFile);
+}
+void inorder(node root)
+{
+    FILE *inOrderFile;
+    if ((inOrderFile = fopen("inorder.txt","a")) == NULL)
+     {
+       printf("Error! opening file");
+       exit(1);
+     }
+     int temp;
+	if(root!=NULL)
+	{
+		inorder(root->left);
+        printf("%d\n",root->data);
+        temp=root->data;
+		fprintf(inOrderFile,"%d\n",temp);
+		inorder(root->right);
+
+	}
+    fclose(inOrderFile);
+}
